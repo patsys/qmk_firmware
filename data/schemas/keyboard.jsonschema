@@ -60,6 +60,7 @@
         "processor": {
             "type": "string",
             "enum": [
+                "RY7203",
                 "cortex-m0",
                 "cortex-m0plus",
                 "cortex-m3",

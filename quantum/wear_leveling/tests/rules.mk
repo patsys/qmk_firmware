@@ -64,3 +64,8 @@ wear_leveling_8byte_SRC := \
 	$(QUANTUM_PATH)/wear_leveling/tests/wear_leveling_8byte.cpp
 wear_leveling_8byte_INC := \
 	$(wear_leveling_common_INC)
+
+ry72xx_wear_leveling_guards_SRC := \
+	$(QUANTUM_PATH)/wear_leveling/tests/ry72xx_wear_leveling_guards.cpp
+ry72xx_wear_leveling_guards_INC := \
+	$(QUANTUM_PATH)/wear_leveling/tests

@@ -741,7 +741,10 @@ def _extract_rules_mk(info_data, rules):
     """
     info_data['processor'] = rules.get('MCU', info_data.get('processor', 'atmega32u4'))
 
-    if info_data['processor'] in CHIBIOS_PROCESSORS:
+    if info_data['processor'] == 'RY7203':
+        info_data.update(processor_type='arm', protocol='RY72XX', platform_key='ry72xx', platform='RY72XX')
+
+    elif info_data['processor'] in CHIBIOS_PROCESSORS:
         arm_processor_rules(info_data, rules)
 
     elif info_data['processor'] in LUFA_PROCESSORS + VUSB_PROCESSORS:
