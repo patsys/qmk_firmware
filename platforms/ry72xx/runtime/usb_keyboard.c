@@ -360,6 +360,25 @@ static void delay_controller_ms(void *context, uint32_t value) {
 static uint8_t leds(void) {
     return keyboard_leds;
 }
+/* Flush a just-latched report synchronously so send_string()/VIA macros transmit
+ * EVERY report, not just the final collapsed one. Without this, a macro's rapid
+ * press/release reports (all emitted within one process_record, before the task
+ * runs) keep overwriting the latched report, so the host only ever sees the last
+ * (empty) one. ry72xx_usb_device_send returns false while the IN endpoint has an
+ * outstanding transfer; Vector50() (USB IRQ) drains it via in_complete(), so
+ * re-enabling interrupts between attempts paces this to host polling. The
+ * bounded spin prevents any hang if the host never drains; the task then sends
+ * whatever is still pending. */
+static void flush_report(unsigned endpoint, const void *report, size_t length, volatile bool *pending) {
+    uint32_t primask;
+    for (unsigned spin = 0; *pending && spin < 100000u; ++spin) {
+        __asm__ volatile("mrs %0, primask\ncpsid i" : "=r"(primask)::"memory");
+        if (*pending && ry72xx_usb_device_configured(&device) && ry72xx_usb_device_send(&device, endpoint, (const uint8_t *)report, length)) {
+            *pending = false;
+        }
+        __asm__ volatile("msr primask, %0" ::"r"(primask) : "memory");
+    }
+}
 static void send_keyboard(report_keyboard_t *report) {
     /* Main-loop producer; USB ISR consumes only while interrupts are masked. */
     uint32_t primask;
@@ -367,6 +386,7 @@ static void send_keyboard(report_keyboard_t *report) {
     latest_report  = *report;
     report_pending = true;
     __asm__ volatile("msr primask, %0" ::"r"(primask) : "memory");
+    flush_report(1, &latest_report, sizeof(latest_report), &report_pending);
 }
 #ifdef NKRO_ENABLE
 static void send_nkro(report_nkro_t *report) {
@@ -375,6 +395,8 @@ static void send_nkro(report_nkro_t *report) {
     latest_nkro  = *report;
     nkro_pending = true;
     __asm__ volatile("msr primask, %0" ::"r"(primask) : "memory");
+    /* NKRO is the default report format, so macros go through here. */
+    flush_report(4, &latest_nkro, sizeof(latest_nkro), &nkro_pending);
 }
 #endif
 static host_driver_t driver = {
