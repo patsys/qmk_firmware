@@ -27,4 +27,8 @@ bool     nova_acquisition_init_settled(nova_acquisition *state, const nova_scan_
 bool     nova_acquisition_scan(nova_acquisition *state);
 void     nova_acquisition_rows(const nova_acquisition *state, uint16_t rows[NOVA_BANKS]);
 uint32_t nova_scan_mmio_read32(uintptr_t address, void *context);
-void     nova_scan_mmio_write32(uintptr_t address, uint32_t value, void *context);
+#ifdef RANKED_DIAGNOSTICS
+/* Last raw analog sample of a matrix position, from the QMK matrix integration. */
+uint16_t nova_matrix_sample(unsigned bank, unsigned channel);
+#endif
+void nova_scan_mmio_write32(uintptr_t address, uint32_t value, void *context);

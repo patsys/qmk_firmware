@@ -3,6 +3,10 @@
 
 #pragma once
 
+/* Analog scan: 6 banks (matrix rows) x 11 channels (matrix columns). */
+#define NOVA_BANKS 6
+#define NOVA_CHANNELS 11
+
 /* Settle time of one analog bank conversion, in ry72xx_delay units. */
 #define NOVA_SCAN_CONVERSION_SETTLE_UNITS 20
 

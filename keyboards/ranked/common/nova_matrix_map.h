@@ -6,7 +6,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-enum { NOVA_BANKS = 6, NOVA_CHANNELS = 11, NOVA_ABSENT_ID = 1 };
+/* Board size from the keyboard's config.h: analog banks (matrix rows) and
+ * channels (matrix columns). The keyboard defines the three tables below. */
+#if !defined(NOVA_BANKS) || !defined(NOVA_CHANNELS)
+#    error "Define NOVA_BANKS and NOVA_CHANNELS in the keyboard's config.h"
+#endif
+enum { NOVA_ABSENT_ID = 1 };
 extern const uint8_t   nova_bank_pin_codes[NOVA_BANKS];
 extern const uint8_t   nova_channel_pin_codes[NOVA_CHANNELS];
 extern const uint8_t   nova_key_ids[NOVA_CHANNELS][NOVA_BANKS];

@@ -26,6 +26,13 @@ void matrix_init_custom(void) {
     // Without a settled acquisition no key can be read; hand over to the bootloader.
     if (!nova_acquisition_init_settled(&acquisition, &io, scan_settle)) bootloader_jump();
 }
+#ifdef RANKED_DIAGNOSTICS
+/* Last raw analog sample of a matrix position (0 if absent or out of range). */
+uint16_t nova_matrix_sample(unsigned bank, unsigned channel) {
+    if (!nova_position_present(bank, channel)) return 0;
+    return acquisition.samples[bank][channel];
+}
+#endif
 bool matrix_scan_custom(matrix_row_t current_matrix[]) {
     if (!nova_acquisition_scan(&acquisition)) return false;
     uint16_t rows[NOVA_BANKS];
