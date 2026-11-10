@@ -22,9 +22,8 @@ See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_to
 
 The analog keys use fixed press/release thresholds. Settings are stored with
 QMK wear-leveling in a reserved 4 KiB flash region; flashing new firmware keeps
-the stock firmware's own settings pages untouched. The RGB Matrix driver supports
-solid color, breathing, whole-board color cycling, horizontal and vertical
-rainbow waves and a moving rainbow chevron.
+the stock firmware's own settings pages untouched. All RGB Matrix effects are
+enabled, including the reactive ones.
 
 ## Bootloader
 

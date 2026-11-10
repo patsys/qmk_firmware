@@ -24,8 +24,8 @@ See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_to
 
 The analog scan (5 banks x 14 channels) and its fixed press/release thresholds
 are shared with the Nova N60 (`keyboards/ranked/common`). The LED controller
-is driven over I2C; RGB Matrix supports solid color, breathing, cycle-all,
-horizontal and vertical rainbow waves and a moving rainbow chevron. Settings are stored with QMK wear-leveling in pages F8-FF; the stock
+is driven over I2C; all RGB Matrix effects are enabled, including the reactive
+ones. Settings are stored with QMK wear-leveling in pages F8-FF; the stock
 firmware's settings pages (D0-EC) are left untouched.
 
 ## Bootloader
